@@ -120,7 +120,7 @@ class Scorpio
     else
       orderBy = 1
 
-    @dbCollection.find().sort({ points: orderBy }).limit(1).toArray((err, results) =>
+    @dbCollection.find().sort( 'points',  orderBy ).limit(1).toArray((err, results) =>
       user = results[0]
       userName = user._user
       userPoints = user.total_score
@@ -159,6 +159,7 @@ class Scorpio
 
               if userCallback.reasons.length <= 1
                 reason = userCallback.reasons[0]
+                console.log reason
                 userReasons = "#{reason.points} points #{reason.reason}"
               else
                 randInt = (Math.floor(Math.random() * (userCallback.reasons.length - 0 + 1)) + 0);
