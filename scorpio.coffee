@@ -175,7 +175,7 @@ class Scorpio
             else
               reasonMessage = for item, i in userReasons
                 ## do not pass our limit specified
-                if i >= limit or i >= 10 then break
+                if i >= limit or i >= 20 then break
                 "#{item.points} points #{item.reason}"
 
               userReasons = reasonMessage.join(", ")
