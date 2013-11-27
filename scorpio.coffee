@@ -178,7 +178,7 @@ class Scorpio
                 if i >= limit or i >= 20 then break
                 "#{item.points} points #{item.reason}"
 
-              userReasons = reasonMessage.join(", ")
+              userReasons = reasonMessage.join("\n ")
 
             @bot.say to, userReasons
               
