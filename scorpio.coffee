@@ -120,11 +120,17 @@ class Scorpio
     else
       orderBy = 1
 
-    @dbCollection.find().sort( 'points',  orderBy ).limit(1).toArray((err, results) =>
+    @dbCollection.find().limit(1).sort({ total_score: orderBy }).toArray((err, results) =>
+      if results is null
+        @bot.say(to, "sorry dawg, no results were found")
+        return
+
+      console.log 'results', results
       user = results[0]
       userName = user._user
       userPoints = user.total_score
 
+      console.log 'yay'
       if order is 'ascending'
         msg = "#{userName} is the leader with #{userPoints} points"
       else
@@ -259,7 +265,7 @@ class Scorpio
         return false
 
       if order is 'ascending' then orderBy = -1 else orderBy = 1
-      @dbCollection.find().limit(limitBy).sort({ points: orderBy }).toArray((err, results)  =>
+      @dbCollection.find().limit(limitBy).sort({ total_score : orderBy }).toArray((err, results)  =>
         msg = for scores in results
           userScore = scores.total_score
           userName = scores._user
@@ -296,6 +302,9 @@ class Scorpio
     @bot = new irc.Client('irc.freenode.net', "#{@botName}",
       debug: true,
       channels: @chatChannel,
+      certExpired: true,
+      secure: true,
+      port: 7070,
       floodProtection: true,
       floodProtectionDelay: 500,
     )
