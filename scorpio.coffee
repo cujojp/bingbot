@@ -327,7 +327,7 @@ class Scorpio
       if match = message.match(/([+-]\d+)\s+(\S+)\s+(for(.*))/)
         [_, score, user, reason] = match
         score = parseInt(score)
-        reason_result = reason.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'_')
+        reason_result = reason.replace(/[&\/\\#+'"<>]/g,'_')
 
         if @_handleBingbot(user) == from and score > 0
           score = -100
