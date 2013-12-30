@@ -2,6 +2,8 @@ irc         = require 'irc'
 $           = require 'jquery'
 connect     = require 'connect'
 mongo       = require 'mongodb'
+pusher      = require 'pusher'
+
 
 class Scorpio
 
@@ -55,6 +57,9 @@ class Scorpio
       {$push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } } },
       {$set: {"total_score": newScore}}, (error, cb)  =>
         if (error) then @_handleError(error)
+        @pusher.trigger('test_channel', 'my_event', {
+          "message": "hello world"
+        });
     )
 
 
@@ -413,6 +418,14 @@ class Scorpio
       @_handleError(message)
 
 
+  _initPusher: =>
+    @pusher = new pusher({
+      appId: '62686',
+      key: '3ea910de3b4179ff0d0e',
+      secret: 'a946198efebd0b12a81d'
+    })
+    
+
   _connectDb: =>
     mongoQuery = "mongodb://#{@appID}:#{@appSecret}.mongolab.com:#{@databasePort}/#{@appID}"
     mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || mongoQuery
@@ -446,12 +459,13 @@ class Scorpio
 
   _init: =>
     @_connectDb()
+    @_initPusher()
 
 bot = new Scorpio(
   bot_name: 'scorpio',
   search_limit: 75,
   irc_channel: '#coolkidsusa'
-  app_name: '<<YOUR HEOKU APP ID>>',
-  app_secret: '<<YOUR HEOKU APP SECRET>>',
+  app_name: 'heroku_app16378963',
+  app_secret: 's8en8qk8u2jnhg31to2v7o4fq0@ds031608',
   app_port: '31608'
 )                     
