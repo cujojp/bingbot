@@ -64,7 +64,7 @@ class Scorpio
     #update( {"_user": { "$regex": "^omgomgomg$", "$options": "-i"}}, {$push: { "reasons" : { $each : [{"reason" : "you suck", "points" : 10 }] } } })
 
     @dbCollection.update( 
-      {"_user": { "$regex": "^#{user}$","$options": "-i"}}, 
+      {"_user": { "$regex": "/^#{user}$/i","$options": "-i"}}, 
       {$push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } } },
       {$set: {"total_score": newScore}}, (error, cb)  =>
         if (error) then @_handleError(error)
@@ -79,7 +79,7 @@ class Scorpio
 
   setUserScore: (user, currScore, newScore, val) =>
     console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{currScore}, NEW SCORE: #{newScore}"
-    @dbCollection.update("_user": { "$regex": "^#{user}$", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
+    @dbCollection.update("_user": { "$regex": "/^#{user}$/i", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
       if (error) then @_handleError(error)
       @pusher.trigger('scorpio_event', 'update', {
         "message": "-- UPDATED SCORE --"
@@ -96,7 +96,7 @@ class Scorpio
     userReason = null
     newScore = null
 
-    @dbCollection.findOne("_user":{ $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user":{ $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
       if (error)
         console.log "error"
         @_handleError(error)
@@ -165,7 +165,7 @@ class Scorpio
 
   sayScoreWithReasons: (from, to, user, limit) =>
 
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -218,7 +218,7 @@ class Scorpio
     
 
   sayScore: (from, to, user) =>
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -228,6 +228,7 @@ class Scorpio
           @bot.say to, msg
           return
         if (userCallback.total_score)
+          console.log userCallback
           # if the user has score we can print the score
           score = userCallback.total_score
           msg = "#{user} has #{score} points"
