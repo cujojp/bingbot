@@ -36,11 +36,22 @@ class Scorpio
       console.log("adding user #{user} in the database. With a reason: #{reason}");
       @dbCollection.insert({"_user" : user, "total_score" : value, "reasons":  [{ "reason" : reason, "points" : value }] }, (error, inserted) =>
         if (error) then @_handleError(error)
+        @pusher.trigger('scorpio_event', 'update', {
+          "message": "-- NEW USER FOR #{user} W/REASON --"
+          "user": user
+          "points": value
+          "reason": reason
+        })
       )
     else 
       console.log "Adding user #{user} in the database"
       @dbCollection.insert({"_user" : user, "total_score" : value, "reasons":  [] }, (error, inserted) =>
         if (error) then @_handleError(error)
+        @pusher.trigger('scorpio_event', 'update', {
+          "message": "-- NEW USER --"
+          "user": user
+          "points": value
+        })
       )   
 
   setUserScoreWithReason: (user, value, newScore, reason) =>
@@ -57,16 +68,24 @@ class Scorpio
       {$push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } } },
       {$set: {"total_score": newScore}}, (error, cb)  =>
         if (error) then @_handleError(error)
-        @pusher.trigger('test_channel', 'my_event', {
-          "message": "hello world"
-        });
+        @pusher.trigger('scorpio_event', 'update', {
+          "message": "-- UPDATED SCORE W/REASON --"
+          "user": user
+          "points": value
+          "reason": reason
+        })
     )
 
 
-  setUserScore: (user, currScore, newScore) =>
+  setUserScore: (user, currScore, newScore, val) =>
     console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{currScore}, NEW SCORE: #{newScore}"
     @dbCollection.update("_user": { "$regex": "^#{user}$", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
       if (error) then @_handleError(error)
+      @pusher.trigger('scorpio_event', 'update', {
+        "message": "-- UPDATED SCORE --"
+        "user": user
+        "points": val
+      })
     )
 
   findUserScore: (user, value, reason) =>
@@ -83,16 +102,16 @@ class Scorpio
         @_handleError(error)
       else
         #we need to get the value of user_field and update it
-        console.log "WE FOUND USER #{user} DATA: #{val}"
         if (userCallback.total_score)
           currScore = userCallback.total_score
-          newScore = (currScore += value)
+          newScore = (currScore += val)
+          console.log "WE FOUND USER #{user} DATA: #{val} CURRENT: #{currScore} NEW: #{newScore}"
           # check for if the user currently has reasons
           if (reason)
             console.log "USER HAS #{userCallback.reasons.length} REASONS FOR POINTS"
             @setUserScoreWithReason(user, val, newScore, reason)
           else
-            @setUserScore(user, currScore, newScore)
+            @setUserScore(user, currScore, newScore, val)
     )
 
   addScore: (user, value, reason) =>
@@ -257,6 +276,7 @@ class Scorpio
     #msg = msg.join(", ")
 
     #@bot.say(to, msg)
+
 
   sayScores: (from, to, limit, order) =>
     console.log "SAYING SCORES #{limit} #{order}"
