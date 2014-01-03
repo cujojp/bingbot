@@ -64,7 +64,7 @@ class Scorpio
     #update( {"_user": { "$regex": "^omgomgomg$", "$options": "-i"}}, {$push: { "reasons" : { $each : [{"reason" : "you suck", "points" : 10 }] } } })
 
     @dbCollection.update( 
-      {"_user": { "$regex": "/^#{user}$/i","$options": "-i"}}, 
+      {"_user": { "$regex": "^#{user}$","$options": "-i"}}, 
       {$push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } } },
       {$set: {"total_score": newScore}}, (error, cb)  =>
         if (error) then @_handleError(error)
@@ -79,7 +79,7 @@ class Scorpio
 
   setUserScore: (user, currScore, newScore, val) =>
     console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{currScore}, NEW SCORE: #{newScore}"
-    @dbCollection.update("_user": { "$regex": "/^#{user}$/i", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
+    @dbCollection.update("_user": { "$regex": "^#{user}$", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
       if (error) then @_handleError(error)
       @pusher.trigger('scorpio_event', 'update', {
         "message": "-- UPDATED SCORE --"
@@ -96,7 +96,7 @@ class Scorpio
     userReason = null
     newScore = null
 
-    @dbCollection.findOne("_user":{ $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user":{ $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
       if (error)
         console.log "error"
         @_handleError(error)
@@ -165,7 +165,7 @@ class Scorpio
 
   sayScoreWithReasons: (from, to, user, limit) =>
 
-    @dbCollection.findOne("_user": { $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -218,7 +218,7 @@ class Scorpio
     
 
   sayScore: (from, to, user) =>
-    @dbCollection.findOne("_user": { $regex: "/^#{user}$/i", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "#{user}", "$options": ['i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -489,4 +489,4 @@ bot = new Scorpio(
   app_name: 'heroku_app16378963',
   app_secret: 's8en8qk8u2jnhg31to2v7o4fq0@ds031608',
   app_port: '31608'
-)                     
+)
