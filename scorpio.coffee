@@ -32,8 +32,8 @@ class Scorpio
   addUser: (user, value, reason) =>
     #  if we have a reason we need to add the user into the db with the reason
     #  otherwise add the user with no reason. And an empty array
-    if reason 
-      console.log("adding user #{user} in the database. With a reason: #{reason}");
+    if reason
+      console.log("adding user #{user} in the database. With a reason: #{reason}")
       @dbCollection.insert({"_user" : user, "total_score" : value, "reasons":  [{ "reason" : reason, "points" : value }] }, (error, inserted) =>
         if (error) then @_handleError(error)
         @pusher.trigger('scorpio_event', 'update', {
@@ -43,7 +43,7 @@ class Scorpio
           "reason": reason
         })
       )
-    else 
+    else
       console.log "Adding user #{user} in the database"
       @dbCollection.insert({"_user" : user, "total_score" : value, "reasons":  [] }, (error, inserted) =>
         if (error) then @_handleError(error)
@@ -52,10 +52,10 @@ class Scorpio
           "user": user
           "points": value
         })
-      )   
+      )
 
   setUserScoreWithReason: (user, value, newScore, reason) =>
-    console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{value}, NEW SCORE: #{newScore}"
+    console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{newScore-value}, NEW SCORE: #{newScore}"
     console.log "ADDING REASON #{reason} TO SCORE"
 
     ## Example Syntax:
@@ -63,10 +63,12 @@ class Scorpio
     #db.users.update({"_user" : "omgomgomg"}, { $push: { "reasons" : { $each : [{"reason" : "you suck", "points" : 10 }] } } })
     #update( {"_user": { "$regex": "^omgomgomg$", "$options": "-i"}}, {$push: { "reasons" : { $each : [{"reason" : "you suck", "points" : 10 }] } } })
 
-    @dbCollection.update( 
-      {"_user": { "$regex": "^#{user}$","$options": "-i"}}, 
-      {$push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } } },
-      {$set: {"total_score": newScore}}, (error, cb)  =>
+    @dbCollection.update(
+      "_user": { "$regex": "^#{user}$", "$options": "-i" },
+      {
+        $set: {"total_score": newScore },
+        $push: { "reasons": { $each: [{"reason" : reason, "points" : value }] } }
+      }, (error, cb) =>
         if (error) then @_handleError(error)
         @pusher.trigger('scorpio_event', 'update', {
           "message": "-- UPDATED SCORE W/REASON --"
@@ -78,14 +80,16 @@ class Scorpio
 
 
   setUserScore: (user, currScore, newScore, val) =>
-    console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{currScore}, NEW SCORE: #{newScore}"
-    @dbCollection.update("_user": { "$regex": "^#{user}$", "$options": "-i" },{$set: {"total_score": newScore}}, (error, cb) =>
-      if (error) then @_handleError(error)
-      @pusher.trigger('scorpio_event', 'update', {
-        "message": "-- UPDATED SCORE --"
-        "user": user
-        "points": val
-      })
+    console.log "SETTING NEW SCORE FOR #{user}, OLD SCORE: #{currScore-val}, NEW SCORE: #{newScore}"
+    @dbCollection.update(
+      "_user": { "$regex": "^#{user}$", "$options": "-i" },
+      {$set: {"total_score": newScore}}, (error, cb) =>
+        if (error) then @_handleError(error)
+        @pusher.trigger('scorpio_event', 'update', {
+          "message": "-- UPDATED SCORE --"
+          "user": user
+          "points": val
+        })
     )
 
   findUserScore: (user, value, reason) =>
@@ -484,8 +488,8 @@ class Scorpio
 bot = new Scorpio(
   bot_name: 'scorpio',
   search_limit: 75,
-  irc_channel: '#coolkidsusa'
+  irc_channel: '#kanyeszone'
   app_name: 'heroku_app16378963',
-  app_secret: 's8en8qk8u2jnhg31to2v7o4fq0@ds031608',
+  app_secret: '<< YOUR HEROKU APP SECRET >>',
   app_port: '31608'
-)                     
+)
