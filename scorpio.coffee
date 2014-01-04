@@ -222,7 +222,7 @@ class Scorpio
     
 
   sayScore: (from, to, user) =>
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "#{user}", "$options": ['i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -232,6 +232,7 @@ class Scorpio
           @bot.say to, msg
           return
         if (userCallback.total_score)
+          console.log userCallback
           # if the user has score we can print the score
           score = userCallback.total_score
           msg = "#{user} has #{score} points"
