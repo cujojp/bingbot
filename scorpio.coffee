@@ -158,7 +158,6 @@ class Scorpio
       userName = user._user
       userPoints = user.total_score
 
-      console.log 'yay'
       if order is 'ascending'
         msg = "#{userName} is the leader with #{userPoints} points"
       else
@@ -222,7 +221,7 @@ class Scorpio
     
 
   sayScore: (from, to, user) =>
-    @dbCollection.findOne("_user": { $regex: "#{user}", "$options": ['i', 's'] }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": ['i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
