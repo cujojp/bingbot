@@ -168,7 +168,7 @@ class Scorpio
 
   sayScoreWithReasons: (from, to, user, limit) =>
 
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": ['i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
