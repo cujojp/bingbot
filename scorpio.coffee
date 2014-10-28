@@ -352,7 +352,7 @@ class Scorpio
     @bot.addListener 'message', (from, to, message) =>
       #console.log('%s => %s: %s', from, to, message)
       @clearScores()
-
+      console.log('smells like dick?', message)
       if match = message.match(/([+-]\d+)\s+(\S+)\s+(for(.*))/)
         [_, score, user, reason] = match
         score = parseInt(score)
