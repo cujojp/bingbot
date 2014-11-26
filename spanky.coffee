@@ -1,6 +1,8 @@
 irc = require 'irc'
 
 bot = new irc.Client('irc.freenode.net', 'spanky',
+  secure: true,
+  port: 7070,
   debug: true,
   channels: ['#coolkidsusa']
 )

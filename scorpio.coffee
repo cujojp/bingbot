@@ -383,20 +383,20 @@ class Scorpio
 
         user = match[1]
         limit = match[2]
-        @sayScoreWithReasons(from, to, @_handleBingbot(user), limit)     
+        @sayScoreWithReasons(from, to, @_handleBingbot(user), limit)
         
       else if match = message.match /^score (\S+) -r/
         console.log 'RANDOMIZE REASON'
         limit = 'random'
         user = match[1]
 
-        @sayScoreWithReasons(from, to, @_handleBingbot(user), limit)     
+        @sayScoreWithReasons(from, to, @_handleBingbot(user), limit)
         
       else if match = message.match /^score (\S+)/
 
         user = match[1]
         
-        @sayScore(from, to, @_handleBingbot(user))    
+        @sayScore(from, to, @_handleBingbot(user))
       
       else if match = message.match /^whats the score (\S+) (\d+) (\S+)/
 
@@ -488,8 +488,8 @@ class Scorpio
 bot = new Scorpio(
   bot_name: 'scorpio',
   search_limit: 75,
-  irc_channel: '#kanyeszone'
+  irc_channel: '#coolkidsusa'
   app_name: 'heroku_app16378963',
-  app_secret: '<< YOUR HEROKU APP SECRET >>',
+  app_secret: 'tvhJaOlNpHLOBmkNxcDGBWuUDgfaaCpF@ds031608',
   app_port: '31608'
 )
