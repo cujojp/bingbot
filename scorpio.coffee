@@ -158,7 +158,6 @@ class Scorpio
       userName = user._user
       userPoints = user.total_score
 
-      console.log 'yay'
       if order is 'ascending'
         msg = "#{userName} is the leader with #{userPoints} points"
       else
@@ -169,7 +168,7 @@ class Scorpio
 
   sayScoreWithReasons: (from, to, user, limit) =>
 
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": ['-i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -210,7 +209,7 @@ class Scorpio
 
             @bot.say to, userReasons
               
-          else 
+          else
             score = userCallback.total_score
             msg = "#{user} has #{score} points"
             @bot.say to, msg
@@ -222,7 +221,7 @@ class Scorpio
     
 
   sayScore: (from, to, user) =>
-    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": "-i" }, (error, userCallback) =>
+    @dbCollection.findOne("_user": { $regex: "^#{user}$", "$options": ['-i', 's'] }, (error, userCallback) =>
       if (error)
         @_handleError(error)
       else
@@ -232,6 +231,7 @@ class Scorpio
           @bot.say to, msg
           return
         if (userCallback.total_score)
+          console.log userCallback
           # if the user has score we can print the score
           score = userCallback.total_score
           msg = "#{user} has #{score} points"
