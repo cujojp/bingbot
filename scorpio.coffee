@@ -207,7 +207,7 @@ class Scorpio
                 if i >= limit or i >= 20 then break
                 "#{item.points} points #{item.reason}"
 
-              userReasons = if typeof(userReasons) == "Array" then ""  else reasonMessage.join(", ")
+              userReasons = if typeof(userReasons) == "Object" then ""  else reasonMessage.join(", ")
 
             @bot.say to, userReasons
               
