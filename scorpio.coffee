@@ -193,12 +193,13 @@ class Scorpio
 
               if userCallback.reasons.length <= 1
                 reason = userCallback.reasons[0]
-                console.log reason
-                userReasons = "#{reason.points} points #{reason.reason}"
+                if reason
+                  userReasons = "#{reason.points} points #{reason.reason}"
               else
-                randInt = (Math.floor(Math.random() * (userCallback.reasons.length - 0 + 1)) + 0);
+                randInt = (Math.floor(Math.random() * (userCallback.reasons.length - 0 + 1)) + 0)
                 reason = userCallback.reasons[randInt]
-                userReasons = "#{reason.points} points #{reason.reason}"
+                if reason
+                  userReasons = "#{reason.points} points #{reason.reason}"
 
             else
               reasonMessage = for item, i in userReasons
@@ -210,7 +211,7 @@ class Scorpio
 
             @bot.say to, userReasons
               
-          else 
+          else
             score = userCallback.total_score
             msg = "#{user} has #{score} points"
             @bot.say to, msg
