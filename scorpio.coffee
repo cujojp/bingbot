@@ -14,6 +14,7 @@ class Scorpio
     @appSecret        = @options.app_secret
     @chatChannel      = @options.irc_channel
     @limit            = @options.search_limit
+    @sfwRooms         = ['#hayesvalley']
 
     #database configs
     @database         = null
@@ -23,7 +24,7 @@ class Scorpio
     # init the new scorpio!
     @_init()
 
-  clearScores: =>
+  clearScores: (target) =>
     @dbCollection.remove( "total_score" : 0, (error, callback) =>
       if (error) then @_handleError(error)
     )
@@ -348,10 +349,19 @@ class Scorpio
 
     return user
 
+  _getCollection: (to) =>
+    console.log @sfwRooms.indexOf(to)
+    if @sfwRooms.indexOf(to) >= 0
+      console.log 'SAFE ROOM -- CHECK HAYES COLLECTION'
+      return 'hayes'
+    else
+      console.log 'BRING THE CHAOS'
+      return 'scorpio'
+
   _initListeners: =>
     # Listen to new messages for addings and removing points 
     @bot.addListener 'message', (from, to, message) =>
-      #console.log('%s => %s: %s', from, to, message)
+      @dbCollection = @collections[@_getCollection(to)]
       @clearScores()
 
       if match = message.match(/([+-]\d+)\s+(\S+)\s+(for(.*))/)
@@ -477,7 +487,12 @@ class Scorpio
       if (error)
         @_handleError(error)
       else
-        @dbCollection = @database.collection('users')
+        @collections = {}
+        @dbCollection = {}
+
+        @collections.scorpio = @database.collection('users')
+        @collections.hayes = @database.collection('hayesvalley_users')
+        #@dbCollection = @database.collection('users')
         @_connectBot()
     )
     
