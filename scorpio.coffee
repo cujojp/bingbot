@@ -12,7 +12,7 @@ class Scorpio
     @botName          = @options.bot_name
     @appID            = @options.app_name
     @appSecret        = @options.app_secret
-    @chatChannel      = [ @options.irc_channel ]
+    @chatChannel      = @options.irc_channel
     @limit            = @options.search_limit
 
     #database configs
@@ -489,7 +489,7 @@ class Scorpio
 bot = new Scorpio(
   bot_name: 'scorpio',
   search_limit: 75,
-  irc_channel: '#coolkidsusa'
+  irc_channel: ['#coolkidsusa', '#hayesvalley']
   app_name: 'heroku_app16378963',
   app_secret: 'tvhJaOlNpHLOBmkNxcDGBWuUDgfaaCpF@ds031608',
   app_port: '31608'
