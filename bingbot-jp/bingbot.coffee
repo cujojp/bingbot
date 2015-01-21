@@ -45,16 +45,14 @@ getImage = (query, callback) ->
       catch e
          console.log html
     
-getMcImage = (help_mcdondons, callback) ->
-  key = "<<teehee>>"
-  maaccas = "maaccas.tumblr.com"
-  query = "http://api.tumblr.com/v2/blog/#{maaccas}/posts/photo?api_key=#{key}&"
-  total_posts = 782
+getTumblrImage = (help_mcdondons, callback, src) ->
+  key = "nsDbY8ovJgrSGGigNlTXdB1czI8zf6vzRo7hl5KTXi2QSGJxnH"
+  tumblr = src
+  query = "http://api.tumblr.com/v2/blog/#{tumblr}/posts/photo?api_key=#{key}&"
+  total_posts = if src is "maaccas.tumblr.com" then 782 else 90
   limit = if help_mcdondons then 5 else 1
   offset = randInt(0, (total_posts-limit))
   params = "limit=#{limit}&offset=#{offset}"
-
-  console.log(help_mcdondons)
 
   http.get query+params, (res) ->
     html = ''
@@ -126,7 +124,7 @@ bot.addListener 'message', (from, to, message) ->
         bot.say(to, "soRry bro!  bing must be down")
 
   else if /help mcdondon/.test(message)
-    getMcImage true ,(img) ->
+    getTumblrImage true ,(img), "maaccas.tumblr.com"  ->
       if img
         console.log(typeof(img))
         if typeof(img) is 'object'
@@ -140,9 +138,16 @@ bot.addListener 'message', (from, to, message) ->
         bot.say(to, "soRry bro!  bing must be down")
 
   else if /mcdondon/.test(message)
-    getMcImage null ,(img) ->
+    getTumblrImage null, (img), "maaccas.tumblr.com"  ->
       if img
         
+        bot.say(to, img)
+      else
+        bot.say(to, "soRry bro!  bing must be down")
+
+  else if /roll/.test(message)
+    getTumblrImage null, (img), "rrrrrrrroll.tumblr.com"  ->
+      if img
         bot.say(to, img)
       else
         bot.say(to, "soRry bro!  bing must be down")
