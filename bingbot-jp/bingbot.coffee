@@ -46,7 +46,7 @@ getImage = (query, callback) ->
          console.log html
     
 getMcImage = (help_mcdondons, callback) ->
-  key = "nsDbY8ovJgrSGGigNlTXdB1czI8zf6vzRo7hl5KTXi2QSGJxnH"
+  key = "<<teehee>>"
   maaccas = "maaccas.tumblr.com"
   query = "http://api.tumblr.com/v2/blog/#{maaccas}/posts/photo?api_key=#{key}&"
   total_posts = 782
