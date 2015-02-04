@@ -145,8 +145,8 @@ bot.addListener 'message', (from, to, message) ->
       else
         bot.say(to, "soRry bro!  bing must be down")
 
-  else if /roll/.test(message)
-    getTumblrImage null, (img), "rrrrrrrroll.tumblr.com"  ->
+  else if /drunk/.test(message)
+    getTumblrImage null, (img), "hotdrunkchicks.tumblr.com"  ->
       if img
         bot.say(to, img)
       else
