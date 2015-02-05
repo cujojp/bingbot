@@ -259,8 +259,7 @@ class Scorpio
 
     @dbCollection.stats((err, stats) =>
       pointsTotal = stats.count
-      dbSize = stats.size
-      console.log stats
+      dbSize = Math.floor((stats.size / 1024))
       msg = "Total number of scores: #{pointsTotal}, database size: #{dbSize} Kb"
       @bot.say(to, msg)
     )
@@ -355,7 +354,6 @@ class Scorpio
       console.log 'SAFE ROOM -- CHECK HAYES COLLECTION'
       return 'hayes'
     else
-      console.log 'BRING THE CHAOS'
       return 'scorpio'
 
   _initListeners: =>
