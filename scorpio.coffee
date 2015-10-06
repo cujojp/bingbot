@@ -1,14 +1,12 @@
 irc         = require 'irc'
-$           = require 'jquery'
+_           = require 'underscore'
 connect     = require 'connect'
 mongo       = require 'mongodb'
 pusher      = require 'pusher'
 
-
 class Scorpio
-
   constructor : (options) ->
-    @options          = $.extend(@defaults, options)
+    @options          = _.extend({}, options)
     @botName          = @options.bot_name
     @appID            = @options.app_name
     @appSecret        = @options.app_secret
@@ -502,7 +500,7 @@ class Scorpio
 bot = new Scorpio(
   bot_name: 'scorpio',
   search_limit: 75,
-  irc_channel: ['#coolkidsusa', '#hayesvalley']
+  irc_channel: ['#coolkidsusa']
   app_name: 'heroku_app16378963',
   app_secret: 'tvhJaOlNpHLOBmkNxcDGBWuUDgfaaCpF@ds031608',
   app_port: '31608'
