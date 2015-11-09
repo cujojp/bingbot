@@ -498,7 +498,7 @@ class Scorpio
     @_initPusher()
 
 bot = new Scorpio(
-  bot_name: 'scorpiø',
+  bot_name: 'scorp¡o',
   search_limit: 75,
   irc_channel: ['#coolkidsusa']
   app_name: 'heroku_app16378963',
