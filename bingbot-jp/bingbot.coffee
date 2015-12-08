@@ -13,15 +13,16 @@ getImage = (query, callback) ->
     html = ''
     res.setEncoding('utf8')
     res.on 'data', (chunk) ->
-      #console.log(chunk)
+      console.log(chunk)
       #console.log('xxxxxx')
       html += chunk
     res.on 'end', ->
       #console.log(html)
-      matches = html.match(/<img src="http(.*?)"/g)
-      #console.log(matches)
+      matches = html.match(/<img height="(\d*?)" width="(\d*?)" src="http(.*?)"/g)
+      console.log(matches)
       if randomMatch = sample(matches)
-        url = randomMatch.split('"')[1]
+        console.log(randomMatch)
+        url = randomMatch.split('"')[5]
         url = url.replace(/&amp;/g, '&')
         url += '.jpg' # trick limechat!
         callback(url)
@@ -29,23 +30,23 @@ getImage = (query, callback) ->
         callback(null)
 
 # GOOOGLE
-getImage = (query, callback) ->
-  url = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=#{query}"
-  http.get url, (res) ->
-    html = ''
-    res.setEncoding('utf8')
-    res.on 'data', (chunk) ->
-      html += chunk
-    res.on 'end', ->
-      try
-        data = JSON.parse(html)
-        console.log data
-        img = sample(data.responseData?.results)?.url
-        callback(img)
-      catch e
-         console.log html
+#getImage = (query, callback) ->
+  #url = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=#{query}"
+  #http.get url, (res) ->
+    #html = ''
+    #res.setEncoding('utf8')
+    #res.on 'data', (chunk) ->
+      #html += chunk
+    #res.on 'end', ->
+      #try
+        #data = JSON.parse(html)
+        #console.log data
+        #img = sample(data.responseData?.results)?.url
+        #callback(img)
+      #catch e
+         #console.log html
     
-getTumblrImage = (help_mcdondons, callback, src) ->
+getTumblrImage = (help_mcdondons, src, callback) ->
   key = "nsDbY8ovJgrSGGigNlTXdB1czI8zf6vzRo7hl5KTXi2QSGJxnH"
   tumblr = src
   query = "http://api.tumblr.com/v2/blog/#{tumblr}/posts/photo?api_key=#{key}&"
@@ -82,7 +83,6 @@ getTumblrImage = (help_mcdondons, callback, src) ->
 randInt = (low, high) ->
   return Math.floor(Math.random() * (high - low) + low)
 
-
 #return getImage 'cats', (img) -> console.log img
 
 bot = new irc.Client('irc.freenode.net', 'bingbot', {
@@ -107,7 +107,6 @@ bot.addListener 'message', (from, to, message) ->
 
   else if /camsnap\s+(.*)/.test(message)
     getImage RegExp.$1, (img) ->
-      console.log(img)
       #bot.say(to, "http://solutions.3m.com/innovation/assets/logo.png")
       if img
         bot.say(to, img)
@@ -117,36 +116,22 @@ bot.addListener 'message', (from, to, message) ->
   else if /campsnap\s*(.*)/.test(message)
     getImage "camp counselor " + RegExp.$1, (img) ->
       console.log(img)
-      #bot.say(to, "http://solutions.3m.com/innovation/assets/logo.png")
       if img
         bot.say(to, img)
       else
         bot.say(to, "soRry bro!  bing must be down")
 
   else if /help mcdondon/.test(message)
-    getTumblrImage true ,(img), "maaccas.tumblr.com"  ->
+    getTumblrImage true, "maaccas.tumblr.com", (img) ->
       if img
-        console.log(typeof(img))
         if typeof(img) is 'object'
-          console.log('fuk')
           img = img.join(",\n ")
-
-        console.log(img)
-
         bot.say(to, img)
       else
         bot.say(to, "soRry bro!  bing must be down")
 
   else if /mcdondon/.test(message)
-    getTumblrImage null, (img), "maaccas.tumblr.com"  ->
-      if img
-        
-        bot.say(to, img)
-      else
-        bot.say(to, "soRry bro!  bing must be down")
-
-  else if /drunk/.test(message)
-    getTumblrImage null, (img), "hotdrunkchicks.tumblr.com"  ->
+    getTumblrImage null, "maaccas.tumblr.com", (img) ->
       if img
         bot.say(to, img)
       else
