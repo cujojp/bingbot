@@ -441,7 +441,7 @@ class Scorpio
       else if message.match(/^points (count|total)/)
         @sayScoreCount(from, to)
 
-      else if message.match(/^help HankScorpio/)
+      else if message.match(/^help scorpio/)
         @sayAllTheScores(from, to)
 
     # Something has gone wrong :(
@@ -498,7 +498,7 @@ class Scorpio
     @_initPusher()
 
 bot = new Scorpio(
-  bot_name: 'HankScorpio',
+  bot_name: 'scorp¡o',
   search_limit: 75,
   irc_channel: ['#coolkidsusa']
   app_name: 'heroku_app16378963',
