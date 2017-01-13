@@ -359,7 +359,7 @@ class Scorpio
     @bot.addListener 'message', (from, to, message) =>
       @dbCollection = @collections[@_getCollection(to)]
       @clearScores()
-
+      console.log('smells like dick?', message)
       if match = message.match(/([+-]\d+)\s+(\S+)\s+(for(.*))/)
         [_, score, user, reason] = match
         score = parseInt(score)
